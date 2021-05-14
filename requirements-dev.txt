@@ -1,6 +1,0 @@
-black
-evdev
-isort
-loguru
-imageio
-numpy
