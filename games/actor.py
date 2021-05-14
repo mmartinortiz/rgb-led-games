@@ -1,10 +1,9 @@
 import glob
-from abc import ABCMeta, abstractclassmethod, abstractmethod
+from abc import ABCMeta, abstractclassmethod
 from itertools import cycle
 from typing import Iterable, List, Tuple
 
 import imageio
-from loguru import logger
 from numpy import ndarray
 
 
@@ -123,7 +122,8 @@ class Actor(metaclass=ABCMeta):
         Set the current sprite of the actor
 
         Args:
-            next_sprite (bool, optional): Indicates if the next sprite has to be drawn. Defaults to False.
+            next_sprite (bool, optional): Indicates if the next sprite has to be drawn.
+            Defaults to False.
         """
         if next_sprite:
             try:

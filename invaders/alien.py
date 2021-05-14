@@ -1,8 +1,6 @@
 from timeit import default_timer as timer
 
-from loguru import logger
-
-from invaders.actor import Actor
+from games.actor import Actor
 
 
 class Alien(Actor):

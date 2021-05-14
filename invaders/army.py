@@ -16,7 +16,7 @@ class Army:
     Args:
         number_of_aliens_per_row (int, optional): [description]. Defaults to 4.
         rows_of_aliens (int, optional): [description]. Defaults to 2.
-        strategy (Strategy, optional): [description]. Defaults to Strategy.SYNC_LEFT_RIGHT.
+        strategy (Strategy, optional): [description]. Defaults to Strategy.SYNC_LEFT_RIGHT.  # noqa: E501
         screen_width (int, optional): [description]. Defaults to None.
         screen_height (int, optional): [description]. Defaults to None.
     """

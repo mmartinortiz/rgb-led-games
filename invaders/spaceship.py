@@ -1,7 +1,5 @@
-from loguru import logger
-
-import invaders.definitions as d
-from invaders.actor import Actor
+import games.definitions as d
+from games.actor import Actor
 
 
 class Spaceship(Actor):

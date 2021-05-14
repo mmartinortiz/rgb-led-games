@@ -1,9 +1,7 @@
 from random import randint
 from timeit import default_timer as timer
 
-from loguru import logger
-
-from pong.actor import Actor
+from games.actor import Actor
 
 
 class Ball(Actor):

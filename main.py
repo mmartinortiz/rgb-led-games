@@ -1,10 +1,10 @@
 import time
 from timeit import default_timer as timer
 
-import invaders.definitions as d
-from invaders.flaschen_screen import FlaschenScreen
+import games.definitions as d
+from games.flaschen_screen import FlaschenScreen
+from games.utils import get_input_device, get_user_input
 from invaders.game import Game
-from invaders.utils import get_input_device, get_user_input
 
 # Gamepad, will provide input from the user to the game
 input_device = get_input_device()

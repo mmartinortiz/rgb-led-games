@@ -1,11 +1,10 @@
-import evdev
-from evdev import InputDevice, categorize, ecodes, list_devices
+from evdev import InputDevice, InputEvent, ecodes, list_devices
 from loguru import logger
 
-import invaders.definitions as d
+import games.definitions as d
 
 
-def get_key(event: evdev.InputEvent) -> int:
+def get_key(event: InputEvent) -> int:
     """
     Given an evdev.InputEvent, returns the corresponding pressed gamepad key
     for the "cheap gamepad that looks like the SNES Gamepad"
@@ -52,7 +51,7 @@ def get_key(event: evdev.InputEvent) -> int:
     return None
 
 
-def get_user_input(device: evdev.InputDevice) -> int:
+def get_user_input(device: InputDevice) -> int:
     """
     Given a device, returns the key (or gamepad buttom) associated
     to the next event in the queue.
@@ -66,9 +65,10 @@ def get_user_input(device: evdev.InputDevice) -> int:
     return get_key(device.read_one())
 
 
-def get_input_device() -> evdev.InputDevice:
+def get_input_device() -> InputDevice:
     """
-    Returns an 'evdev.InputDevice' representing a GamePad. Asks the user for input if there is more than one gamepad
+    Returns an 'evdev.InputDevice' representing a GamePad.
+    Asks the user for input if there is more than one gamepad
     """
     selection = None
 
@@ -91,7 +91,8 @@ def get_input_device() -> evdev.InputDevice:
                     done = True
             except ValueError:
                 logger.error(
-                    f"The input '{selection}' does not look like a number between 0 and {len(available_devices) -1}. Try again"
+                    f"The input '{selection}' does not look "
+                    "like a number between 0 and {len(available_devices) -1}. Try again"
                 )
 
     elif len(available_devices) == 1:

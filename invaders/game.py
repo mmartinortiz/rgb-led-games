@@ -1,13 +1,11 @@
 from itertools import product
 from timeit import default_timer as timer
 
-from loguru import logger
-
-import invaders.definitions as d
-from invaders.actor import Actor
+import games.definitions as d
+from games.actor import Actor
+from games.flaschen_screen import FlaschenScreen
 from invaders.army import Army
 from invaders.bullet import Bullet
-from invaders.flaschen_screen import FlaschenScreen
 from invaders.spaceship import Spaceship
 
 

@@ -1,6 +1,6 @@
 from timeit import default_timer as timer
 
-from invaders.actor import Actor
+from games.actor import Actor
 
 
 class Bullet(Actor):

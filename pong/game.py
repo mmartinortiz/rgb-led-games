@@ -1,11 +1,6 @@
-from itertools import product
-from timeit import default_timer as timer
-
-from loguru import logger
-
-from pong.actor import Actor
+from games.actor import Actor
+from games.flaschen_screen import FlaschenScreen
 from pong.ball import Ball
-from pong.flaschen_screen import FlaschenScreen
 from pong.stick import Stick
 
 
@@ -35,8 +30,8 @@ class Game:
         if button is not None:
             self.stick_p1.update(button)
 
-        if collision(self.stick_p1, self.ball):
-            self.ball.bounce()
+        # if collision(self.stick_p1, self.ball):
+        # self.ball.bounce()
 
     def set_leds(self, actor: Actor) -> None:
         """

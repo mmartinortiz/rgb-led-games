@@ -1,6 +1,4 @@
-from loguru import logger
-
-from pong.actor import Actor
+from games.actor import Actor
 
 
 class Stick(Actor):

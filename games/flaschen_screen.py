@@ -1,17 +1,16 @@
 import socket
-import time
 from itertools import product
 from typing import Tuple
 
 import numpy as np
-from loguru import logger
 
 
 class FlaschenScreen(object):
     """
     A Framebuffer display interface that sends a frame via UDP
 
-    Adapted from: https://github.com/hzeller/flaschen-taschen/blob/master/api/python/flaschen.py
+    Adapted from:
+    https://github.com/hzeller/flaschen-taschen/blob/master/api/python/flaschen.py
     """
 
     def __init__(
@@ -29,8 +28,9 @@ class FlaschenScreen(object):
             port (int): The flaschen taschen server port number
             width (int): The widtf of the faschen taschen display in pixels
             height (int): The height of the flaschen taschen display in pixels
-            layer (int, optional): The layer of the flaschen taschen display to write to . Defaults to 5.
-            transparent (bool, optional): If True, black(0, 0, 0) will be transparent and show the layer bellow. Defaults to False.
+            layer (int, optional): The layer of the flaschen taschen display. Defaults to 5  # noqa: E501
+            transparent (bool, optional): If True, black(0, 0, 0) will be transparent
+            and show the layer bellow. Defaults to False.
         """
 
         self.width = width
