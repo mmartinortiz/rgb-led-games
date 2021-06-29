@@ -1,6 +1,7 @@
 from timeit import default_timer as timer
 
 from games.actor import Actor
+from invaders import get_asset
 
 
 class Bullet(Actor):
@@ -12,7 +13,7 @@ class Bullet(Actor):
         self, x, y, screen_width=None, screen_height=None, sprites_per_second=1 / 6
     ):
         super().__init__()
-        self.load_sprites(sprites_glob="./assets/bullet_*.png")
+        self.load_sprites(sprites_glob=get_asset("bullet_*.png"))
 
         self.screen_width = screen_width
         self.screen_height = screen_height
