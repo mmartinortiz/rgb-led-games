@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "venv/bin/python",
+    "python.linting.pylintArgs": ["--generated-members", "from_json,query"],
+}

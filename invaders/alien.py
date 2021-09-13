@@ -1,6 +1,8 @@
+import os
 from timeit import default_timer as timer
 
 from games.actor import Actor
+from invaders import get_asset
 
 
 class Alien(Actor):
@@ -12,7 +14,7 @@ class Alien(Actor):
         self, x, y, screen_width=None, screen_height=None, sprites_per_second=1 / 6
     ):
         super().__init__()
-        self.load_sprites(sprites_glob="./assets/alien_*.png")
+        self.load_sprites(sprites_glob=get_asset("alien_*.png"))
 
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -56,7 +58,7 @@ class Alien(Actor):
         """
         Explosions are represented with a different animation
         """
-        self.load_sprites(sprites_glob="./assets/alien-explosion_*.png")
+        self.load_sprites(sprites_glob=get_asset("alien-explosion_*.png"))
 
         # Replace the iterator by one that is not cyclic
         self.sprites_it = iter(self.sprites)
