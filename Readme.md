@@ -24,6 +24,20 @@ I'm not afiliated in any way with the following vendors. The links are added so 
 
 As you can imagine, you need to connect everything together :-)
 
+### A wooden enclosure
+
+- [Wooden enclosure for the project](./console_60x60.svg). Generated using [Boxes.py's Console2](https://www.festi.info/boxes.py/Console2?language=en).
+
+List of resources for wood boxes:
+
+- [Boxes.py](https://www.festi.info/boxes.py/). [Project homepage](https://hackaday.io/project/10649-boxespy).
+- [List with other generators](https://www.instructables.com/The-Ultimate-Guide-to-Laser-cut-Box-Generators/)
+- Places to cut the design:
+  - [LaserSpace 040 (Eindhoven)](https://laserspace040.com/)
+  - [De Factorij (Eindhoven)](http://de-factorij.nl/?page_id=490)
+  - [Digifablab (Eindhoven)](https://www.digifab.nl)
+  - [FabLab 013 (Tilburg)](https://fablab013.nl/)
+
 ## Software
 
 - Python 3
