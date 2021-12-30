@@ -1,3 +1,5 @@
+from loguru import logger
+
 import games.definitions as d
 from games.actor import Actor
 from invaders import get_asset
@@ -19,13 +21,18 @@ class Spaceship(Actor):
         self.x = 0
         self.y = screen_height - self.height
 
-    def update(self, button: int):
-        if button == d.LEFT:
-            if self.left() > 0:
-                # Move to left
-                self.x -= 1
+    def update(self, position: int):
+        max_position = self.screen_width - self.width
 
-        if button == d.RIGHT:
-            if self.right() < self.screen_width:
-                # Move to right
-                self.x += 1
+        self.x = position if position <= max_position else max_position
+        # x = position if position <= max_position else max_position
+        # logger.debug(x)
+        # if button == d.LEFT:
+        #     if self.left() > 0:
+        #         # Move to left
+        #         self.x -= 1
+
+        # if button == d.RIGHT:
+        #     if self.right() < self.screen_width:
+        #         # Move to right
+        #         self.x += 1

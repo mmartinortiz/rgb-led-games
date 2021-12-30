@@ -1,61 +1,39 @@
-import time
-from timeit import default_timer as timer
+import argparse
+
+from loguru import logger
 
 import games.definitions as d
 from games.flaschen_screen import FlaschenScreen
-from games.utils import get_input_device, get_user_input
-from invaders.game import Game
+from invaders.game import Game as Invaders
 
-# Gamepad, will provide input from the user to the game
-input_device = get_input_device()
+WIDTH = 64
+HEIGHT = 64
 
-# Screen, will show the game state
-screen = FlaschenScreen("localhost", 1337, 64, 64, transparent=True)
+parser = argparse.ArgumentParser()
 
-# Game, it will keep the state of the game
-game = Game(screen=screen)
+parser.add_argument(
+    "-g",
+    "--game",
+    help="What game do you want to play? 'invaders' or 'pong'?",
+    choices=["invaders", "pong"],
+    required=True,
+)
 
-# Sprites per second
-SPS = 6
-start = timer()
+if __name__ == "__main__":
+    # Screen, will show the game state
+    screen = FlaschenScreen("localhost", 1337, WIDTH, HEIGHT, transparent=True)
 
-print("Welcome to Space Invarers, LED version ;-)")
-bye = False
-while not bye:
-    # Mainly, the game loop:
-    # 1. Get input from the user
-    # 2. Update the game state
-    # 3. Draw the new state
-    try:
-        # User input
-        key = get_user_input(input_device)
+    args = parser.parse_args()
+    if args.game == "invaders":
+        # Game, it will keep the state of the game
+        game = Invaders(screen=screen)
+    elif args.game == "pong":
+        print("Not yet, Pong is work in progress")
 
-        # Update state
-        game.update(key)
+    game.loop()
 
-        if key == d.START:
-            # Do we leave the game loop?
-            bye = True
+    # Close, clear and say goodbye
+    screen.clear_canvas()
+    screen.draw_canvas()
 
-        # Draw
-        screen.clear_canvas()
-
-        # Calculate if the next sprite will be drawn
-        next_sprite = False
-        if timer() - start > 1 / SPS:
-            next_sprite = True
-            start = timer()
-
-        # Ask the game to draw the current state
-        game.draw(next_sprite=next_sprite)
-
-        time.sleep(0.01)
-
-    except KeyboardInterrupt:
-        bye = True
-
-# Close, clear and say goodbye
-input_device.close()
-screen.clear_canvas()
-screen.draw_canvas()
-print("bye")
+    print("bye")

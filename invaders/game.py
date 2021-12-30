@@ -1,9 +1,12 @@
+import time
 from itertools import product
 from timeit import default_timer as timer
+from typing import Any, Dict
 
 import games.definitions as d
 from games.actor import Actor
 from games.flaschen_screen import FlaschenScreen
+from games.gamepad import Gamepad
 from invaders.army import Army
 from invaders.bullet import Bullet
 from invaders.spaceship import Spaceship
@@ -39,6 +42,43 @@ class Game:
         self.lapse_between_bullets = 2
         self.last_bullet_at = timer() - self.lapse_between_bullets
 
+    def loop(self):
+        print("Welcome to Space Invarers, LED version ;-)")
+        SPS = 6
+        start = timer()
+        # Gamepad, will provide input from the user to the game
+        gamepad = Gamepad(joystick="A0", button="D3", scale=(0, self.screen.height))
+
+        bye = False
+        while not bye:
+            # Mainly, the game loop:
+            # 1. Get input from the user
+            # 2. Update the game state
+            # 3. Draw the new state
+            try:
+                # User input
+                player_1 = gamepad.get_status()
+
+                # Update state
+                self.update(player_1)
+
+                # Draw
+                self.screen.clear_canvas()
+
+                # Calculate if the next sprite will be drawn
+                next_sprite = False
+                if timer() - start > 1 / SPS:
+                    next_sprite = True
+                    start = timer()
+
+                # Ask the game to draw the current state
+                self.draw(next_sprite=next_sprite)
+
+                # time.sleep(0.01)
+
+            except KeyboardInterrupt:
+                bye = True
+
     def new_bullet(self, x: int, y: int) -> None:
         """
         Creates a new bullet, at coordinates x and y
@@ -58,19 +98,17 @@ class Game:
                 )
             )
 
-    def update(self, button: int) -> None:
-        """
-        Update the game status
+    def update(self, user_input: Dict[str, Any]) -> None:
+        """Update the game status according to the use rinput
 
         Args:
-            button (int): Button pressed by the player
+            user_input (Dict[str, Any]): The user input comes from the Gamepad
         """
-        # Update spaceship
-        if button is not None:
-            self.spaceship.update(button)
+        # Update spaceship position
+        self.spaceship.update(user_input["joystick"])
 
         # Create new bullets
-        if button == d.A:
+        if user_input["button"]:
             self.new_bullet(
                 # Todo: calculate coordinates programatically
                 x=self.spaceship.x + 2,
@@ -82,7 +120,7 @@ class Game:
 
         # Move all the bullets
         for bullet in self.bullets:
-            bullet.update(button)
+            bullet.update(None)
 
         # Any bullet impacted an alien?
         for bullet, alien in product(self.bullets, self.army.aliens):
