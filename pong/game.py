@@ -47,6 +47,8 @@ class Game(BaseGame):
                 self.update(player_1)
 
                 # Draw
+                self.screen.clear_canvas()
+
                 next_sprite, start = self.draw_next_sprite(start)
 
                 self.draw(next_sprite=next_sprite)
