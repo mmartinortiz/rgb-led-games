@@ -139,26 +139,6 @@ class Game(BaseGame):
         # Keep only those bullets that are "in the screen"
         self.bullets = [bullet for bullet in self.bullets if bullet.y > 0]
 
-    def set_leds(self, actor: Actor) -> None:
-        """
-        For a given actor, set on the leds on the screen according
-        to the current sprite
-
-        Args:
-            actor (Actor): Actor to be drawn in the screen
-        """
-
-        # j --> y
-        for j, row in enumerate(actor.current_sprite):
-            # i --> x
-            for i, color in enumerate(row):
-                rgb = (color[0], color[1], color[2])
-
-                x = i + actor.x
-                y = j + actor.y
-
-                self.screen.set_in_canvas(x, y, rgb)
-
     def draw(self, next_sprite: bool) -> None:
         """
         Draw the game status in the screen. Drawing is composed of
