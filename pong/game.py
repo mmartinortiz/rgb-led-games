@@ -1,8 +1,10 @@
 from timeit import default_timer as timer
+from typing import Any, Dict
 
 from games.actor import Actor
 from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
+from games.gamepad import Gamepad
 from pong.ball import Ball
 from pong.stick import Stick
 
@@ -27,6 +29,8 @@ class Game(BaseGame):
     def loop(self):
         print("Welcome to Pong!, LED version ;-)")
 
+        gamepad_p1 = Gamepad(joystick="A0", button="D3", scale=(0, self.screen.height))
+
         start = timer()
 
         bye = False
@@ -37,7 +41,7 @@ class Game(BaseGame):
             # 3. Draw the new state
             try:
                 # User input
-                player_1 = self.stick_p1.get_status()
+                player_1 = gamepad_p1.get_status()
 
                 # Update state
                 self.update(player_1)
@@ -49,16 +53,14 @@ class Game(BaseGame):
             except KeyboardInterrupt:
                 bye = True
 
-    def update(self, button: int) -> None:
+    def update(self, user_input: Dict[str, Any]) -> None:
         """
         Update the game status
 
         Args:
             button (int): Button pressed by the player
         """
-        # Update spaceship
-        if button is not None:
-            self.stick_p1.update(button)
+        self.stick_p1.update(user_input["joystick"])
 
         # if collision(self.stick_p1, self.ball):
         # self.ball.bounce()

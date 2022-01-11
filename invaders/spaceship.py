@@ -1,8 +1,7 @@
 from loguru import logger
 
-import games.definitions as d
 from games.actor import Actor
-from invaders import get_asset
+from invaders import ASSETS_PATH
 
 
 class Spaceship(Actor):
@@ -11,8 +10,8 @@ class Spaceship(Actor):
     """
 
     def __init__(self, screen_width=None, screen_height=None):
-        super().__init__()
-        self.load_sprites(sprites_glob=get_asset("spaceship_*.png"))
+        super().__init__(assets_path=ASSETS_PATH)
+        self.load_sprites(sprites_glob=self.get_asset("spaceship_*.png"))
 
         self.screen_width = screen_width
         self.screen_height = screen_height

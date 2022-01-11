@@ -5,6 +5,7 @@ from loguru import logger
 import games.definitions as d
 from games.flaschen_screen import FlaschenScreen
 from invaders.game import Game as Invaders
+from pong.game import Game as Pong
 
 WIDTH = 64
 HEIGHT = 64
@@ -28,7 +29,7 @@ if __name__ == "__main__":
         # Game, it will keep the state of the game
         game = Invaders(screen=screen)
     elif args.game == "pong":
-        print("Not yet, Pong is work in progress")
+        game = Pong(screen=screen)
 
     game.loop()
 

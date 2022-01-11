@@ -1,4 +1,5 @@
 from games.actor import Actor
+from pong import ASSETS_PATH
 
 
 class Stick(Actor):
@@ -7,8 +8,8 @@ class Stick(Actor):
     """
 
     def __init__(self, screen_width=None, screen_height=None):
-        super().__init__()
-        self.load_sprites(sprites_glob="./assets/stick_*.png")
+        super().__init__(assets_path=ASSETS_PATH)
+        self.load_sprites(sprites_glob=self.get_asset("stick_*.png"))
 
         self.screen_width = screen_width
         self.screen_height = screen_height

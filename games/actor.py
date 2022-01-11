@@ -1,9 +1,12 @@
 import glob
+import os
 from abc import ABCMeta, abstractclassmethod
 from itertools import cycle
+from os import PathLike
 from typing import Iterable, List, Tuple
 
 import imageio
+from loguru import logger
 from numpy import ndarray
 
 
@@ -32,7 +35,7 @@ class Actor(metaclass=ABCMeta):
     # Flag to show or hide the actor
     show: bool = None
 
-    def __init__(self):
+    def __init__(self, assets_path: PathLike):
         self.x = None
         self.y = None
 
@@ -45,6 +48,14 @@ class Actor(metaclass=ABCMeta):
 
         self.show = None
 
+        self.assets_path = assets_path
+
+    def get_asset(self, f: str) -> str:
+        """Returns the absolute path of the file "f" to the assets folder"""
+
+        path = os.path.join(self.assets_path, f)
+        return path
+
     def load_sprites(self, sprites_glob: str) -> None:
         """
         Initializes the actor sprites
@@ -52,6 +63,7 @@ class Actor(metaclass=ABCMeta):
         Args:
             sprites_glob (str): Path to the sprite to load, it support wildcards like *
         """
+        logger.debug(sprites_glob)
         # Each sprite is saved in a separated file
         self.sprites = [imageio.imread(image) for image in glob.iglob(sprites_glob)]
 
