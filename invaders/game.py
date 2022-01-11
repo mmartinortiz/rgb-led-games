@@ -1,10 +1,9 @@
-import time
 from itertools import product
 from timeit import default_timer as timer
 from typing import Any, Dict
 
-import games.definitions as d
 from games.actor import Actor
+from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad
 from invaders.army import Army
@@ -12,12 +11,13 @@ from invaders.bullet import Bullet
 from invaders.spaceship import Spaceship
 
 
-class Game:
+class Game(BaseGame):
     """
     Class that keeps the state of the game
     """
 
     def __init__(self, screen: FlaschenScreen):
+        super().__init__()
         # Screen where things are drawn
         self.screen = screen
 
@@ -44,7 +44,6 @@ class Game:
 
     def loop(self):
         print("Welcome to Space Invarers, LED version ;-)")
-        SPS = 6
         start = timer()
         # Gamepad, will provide input from the user to the game
         gamepad = Gamepad(joystick="A0", button="D3", scale=(0, self.screen.height))
@@ -66,10 +65,7 @@ class Game:
                 self.screen.clear_canvas()
 
                 # Calculate if the next sprite will be drawn
-                next_sprite = False
-                if timer() - start > 1 / SPS:
-                    next_sprite = True
-                    start = timer()
+                next_sprite, start = self.draw_next_sprite(start)
 
                 # Ask the game to draw the current state
                 self.draw(next_sprite=next_sprite)

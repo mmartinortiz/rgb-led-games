@@ -1,15 +1,20 @@
+from timeit import default_timer as timer
+
 from games.actor import Actor
+from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from pong.ball import Ball
 from pong.stick import Stick
 
 
-class Game:
+class Game(BaseGame):
     """
     Class that keeps the state of the game
     """
 
     def __init__(self, screen: FlaschenScreen):
+        super().__init__()
+
         # Screen where things are drawn
         self.screen = screen
 
@@ -18,6 +23,31 @@ class Game:
 
         # The ball
         self.ball = Ball(32, 32, screen_height=screen.height, screen_width=screen.width)
+
+    def loop(self):
+        print("Welcome to Pong!, LED version ;-)")
+
+        start = timer()
+
+        bye = False
+        while not bye:
+            # Mainly, the game loop:
+            # 1. Get input from the user
+            # 2. Update the game state
+            # 3. Draw the new state
+            try:
+                # User input
+                player_1 = self.stick_p1.get_status()
+
+                # Update state
+                self.update(player_1)
+
+                # Draw
+                next_sprite, start = self.draw_next_sprite(start)
+
+                self.draw(next_sprite=next_sprite)
+            except KeyboardInterrupt:
+                bye = True
 
     def update(self, button: int) -> None:
         """
