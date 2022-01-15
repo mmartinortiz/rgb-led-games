@@ -15,13 +15,16 @@ class Game(BaseGame):
     """
 
     def __init__(self, screen: FlaschenScreen):
-        super().__init__()
+        super().__init__(sprites_per_second=10)
 
         # Screen where things are drawn
         self.screen = screen
 
         # Player 1 stick
-        self.stick_p1 = Stick(screen_height=screen.height, screen_width=screen.width)
+        self.stick_p1 = Stick(screen_height=screen.right, screen_width=screen.botton)
+
+        self.player_1_score = 0
+        self.player_2_score = 0
 
         # The ball
         self.ball = Ball(32, 32, screen_height=screen.height, screen_width=screen.width)
@@ -45,6 +48,12 @@ class Game(BaseGame):
 
                 # Update state
                 self.update(player_1)
+
+                if self.ball.left() <= self.screen.left:
+                    self.player_2_score += 1
+
+                if self.ball.right() >= self.screen.right:
+                    self.player_1_score += 1
 
                 # Draw
                 self.screen.clear_canvas()
@@ -85,6 +94,15 @@ class Game(BaseGame):
 
         self.ball.move(next_sprite=next_sprite)
         self.set_leds(self.ball)
+
+        # Draw score
+        for x in range(self.player_1_score):
+            self.screen.set_in_canvas(x, self.screen.width - 1, (255, 0, 0))
+
+        for x in range(self.player_2_score):
+            self.screen.set_in_canvas(
+                self.screen.height - x - 1, self.screen.width - 1, (255, 0, 0)
+            )
 
         # Finally, draw the canvas
         self.screen.draw_canvas()

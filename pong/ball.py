@@ -14,8 +14,8 @@ class Ball(Actor):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("ball_*.png"))
 
-        self.screen_width = screen_width - 1
-        self.screen_height = screen_height - 1
+        self.screen_width = screen_width
+        self.screen_height = screen_height
 
         # Starting position
         self.x = x
@@ -45,3 +45,9 @@ class Ball(Actor):
 
         self.x += self.vx
         self.y += self.vy
+
+    def left(self):
+        return self.x
+
+    def right(self):
+        return self.x + self.width - 1
