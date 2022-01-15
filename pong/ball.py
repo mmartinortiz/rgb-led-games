@@ -10,9 +10,7 @@ class Ball(Actor):
     An alien, the bad guy of the game
     """
 
-    def __init__(
-        self, x, y, screen_width=None, screen_height=None, sprites_per_second=1 / 6
-    ):
+    def __init__(self, x, y, screen_width=None, screen_height=None):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("ball_*.png"))
 
@@ -24,36 +22,26 @@ class Ball(Actor):
         self.y = y
 
         # Speed
-        self.vx = randint(2, 3)
-        self.vy = randint(-4, 4)
+        self.vx = self.rand_speed()
+        self.vy = self.rand_speed()
 
-        self.sprites_per_second = sprites_per_second
         self.start = timer()
+
+    @staticmethod
+    def rand_speed():
+        return randint(-3, 3)
 
     def update(self, button: int):
         # The ball does not care about the user input
         pass
 
     def move(self, next_sprite):
-        if not next_sprite:
-            return
+        # Did we hit a wall?
+        if self.x <= 0 or self.x + self.width >= self.screen_width:
+            self.vx = -self.vx
+
+        if self.y <= 0 or self.y + self.height >= self.screen_height:
+            self.vy = -self.vy
 
         self.x += self.vx
         self.y += self.vy
-
-        # Did we hit a wall?
-        if self.x <= 0:
-            self.x = 0
-            self.vx = -self.vx
-
-        if self.x >= self.screen_width - 1:
-            self.x = self.screen_width - 1
-            self.vx = -self.vx
-
-        if self.y <= 0:
-            self.y = 0
-            self.vy = randint(-4, 4)
-
-        if self.y >= self.screen_height - 1:
-            self.y = self.screen_height - 1
-            self.vy = randint(-4, 4)
