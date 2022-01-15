@@ -28,7 +28,10 @@ class Ball(Actor):
         self.start = timer()
 
     @staticmethod
-    def rand_speed():
+    def rand_speed(current_speed: int = None):
+        if current_speed:
+            return randint(1, 3) if current_speed > 0 else randint(-3, -1)
+        
         speed = 0
         while speed == 0:
             speed = randint(-3, 3)
@@ -58,10 +61,10 @@ class Ball(Actor):
 
     def bounce(self, direction: str):
         if direction == "left" or direction == "right":
-            self.vx = -self.vx
+            self.vx = -self.rand_speed(self.vx)
 
         if direction == "up" or direction == "down":
-            self.vy = -self.vy
+            self.vy = -self.rand_speed(self.vy)
 
         self.x += self.vx
         self.y += self.vy
