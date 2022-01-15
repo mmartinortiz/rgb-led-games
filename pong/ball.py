@@ -22,8 +22,13 @@ class Ball(Actor):
         self.y = y
 
         # Speed
-        self.vx = self.rand_speed()
-        self.vy = self.rand_speed()
+        valid_speed = False
+        while not valid_speed:
+            self.vx = self.rand_speed()
+            self.vy = self.rand_speed()
+
+            if self.vx != 0 and self.vy != 0:
+                valid_speed = True
 
         self.start = timer()
 
