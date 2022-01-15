@@ -98,7 +98,7 @@ class Actor(metaclass=ABCMeta):
         Returns:
             int: X most right coordinate
         """
-        return self.x + self.width
+        return self.x + self.width - 1
 
     def top(self) -> int:
         """
@@ -116,7 +116,7 @@ class Actor(metaclass=ABCMeta):
         Returns:
             int: Y coordinate of the actor's bottom
         """
-        return self.y + self.height
+        return self.y + self.height - 1
 
     @abstractclassmethod
     def update(cls, button: int) -> None:

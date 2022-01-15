@@ -1,5 +1,6 @@
 from random import randint
 from timeit import default_timer as timer
+from typing import Dict
 
 from games.actor import Actor
 from pong import ASSETS_PATH
@@ -10,12 +11,11 @@ class Ball(Actor):
     An alien, the bad guy of the game
     """
 
-    def __init__(self, x, y, screen_width=None, screen_height=None):
+    def __init__(self, x: int, y: int, screen_limits: Dict[str, str]):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("ball_*.png"))
 
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_limits = screen_limits
 
         # Starting position
         self.x = x
@@ -37,17 +37,17 @@ class Ball(Actor):
 
     def move(self, next_sprite):
         # Did we hit a wall?
-        if self.x <= 0 or self.x + self.width >= self.screen_width:
+        if (
+            self.left() <= self.screen_limits["left"]
+            or self.right() >= self.screen_limits["right"]
+        ):
             self.vx = -self.vx
 
-        if self.y <= 0 or self.y + self.height >= self.screen_height:
+        if (
+            self.top() <= self.screen_limits["top"]
+            or self.bottom() >= self.screen_limits["bottom"]
+        ):
             self.vy = -self.vy
 
         self.x += self.vx
         self.y += self.vy
-
-    def left(self):
-        return self.x
-
-    def right(self):
-        return self.x + self.width - 1

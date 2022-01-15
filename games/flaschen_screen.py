@@ -53,7 +53,7 @@ class FlaschenScreen(object):
         self.left = 0
         self.right = self.width - 1
         self.top = 0
-        self.botton = self.height - 1
+        self.bottom = self.height - 1
 
     def _get_clear_canvas(self) -> None:
         """
