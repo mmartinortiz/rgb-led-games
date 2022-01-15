@@ -61,6 +61,11 @@ class Game(BaseGame):
                 next_sprite, start = self.draw_next_sprite(start)
 
                 self.draw(next_sprite=next_sprite)
+
+                if self.player_1_score == 32 or self.player_2_score == 32:
+                    # We have a winer! and start again :-)
+                    self.player_1_score = self.player_2_score = 0
+                
             except KeyboardInterrupt:
                 bye = True
 
