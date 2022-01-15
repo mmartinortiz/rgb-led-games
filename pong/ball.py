@@ -31,7 +31,7 @@ class Ball(Actor):
     def rand_speed(current_speed: int = None):
         if current_speed:
             return randint(1, 3) if current_speed > 0 else randint(-3, -1)
-        
+
         speed = 0
         while speed == 0:
             speed = randint(-3, 3)
