@@ -21,8 +21,8 @@ class Gamepad:
             will be scaled between the first and second element of this tuple
         """
 
-        self.joystick = Potentiometer(joystick)
-        self.button = Button(button)
+        self.joystick = Potentiometer(joystick) if joystick else None
+        self.button = Button(button) if button else None
 
         self.potentiometer_min = 0
         self.potentiometer_max = 999
@@ -34,11 +34,18 @@ class Gamepad:
 
     def get_status(self) -> Dict[str, Any]:
         joystick_value = (
-            self.scale_potentiometer_value(self.joystick.position)
-            if self.scale
-            else self.joystick.position
+            (
+                self.scale_potentiometer_value(self.joystick.position)
+                if self.scale
+                else self.joystick.position
+            )
+            if self.joystick
+            else None
         )
-        status = {"joystick": joystick_value, "button": self.button.is_pressed}
+
+        button_pressed = self.button.is_pressed if self.button else None
+
+        status = {"joystick": joystick_value, "button": button_pressed}
 
         return status
 

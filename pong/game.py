@@ -27,7 +27,9 @@ class Game(BaseGame):
         }
 
         # Player 1 stick
-        self.stick_p1 = Stick(screen_limits=screen_limits)
+        middle = int(screen.height / 2)
+        self.stick_p1 = Stick(x=screen.left, y=middle, screen_limits=screen_limits)
+        self.stick_p2 = Stick(x=screen.right, y=middle, screen_limits=screen_limits)
 
         self.player_1_score = 0
         self.player_2_score = 0
@@ -38,7 +40,8 @@ class Game(BaseGame):
     def loop(self):
         print("Welcome to Pong!, LED version ;-)")
 
-        gamepad_p1 = Gamepad(joystick="A0", button="D3", scale=(0, self.screen.height))
+        gamepad_p1 = Gamepad(joystick="A0", button=None, scale=(0, self.screen.height))
+        gamepad_p2 = Gamepad(joystick="A1", button=None, scale=(0, self.screen.height))
 
         start = timer()
 
@@ -51,9 +54,10 @@ class Game(BaseGame):
             try:
                 # User input
                 player_1 = gamepad_p1.get_status()
+                player_2 = gamepad_p2.get_status()
 
                 # Update state
-                self.update(player_1)
+                self.update(player_1, player_2)
 
                 if self.ball.left() <= self.screen.left:
                     self.player_2_score += 1
@@ -75,14 +79,15 @@ class Game(BaseGame):
             except KeyboardInterrupt:
                 bye = True
 
-    def update(self, user_input: Dict[str, Any]) -> None:
+    def update(self, player_1: Dict[str, Any], player_2: Dict[str, Any]) -> None:
         """
         Update the game status
 
         Args:
             button (int): Button pressed by the player
         """
-        self.stick_p1.update(user_input["joystick"])
+        self.stick_p1.update(player_1["joystick"])
+        self.stick_p2.update(player_2["joystick"])
 
         # if collision(self.stick_p1, self.ball):
         # self.ball.bounce()
@@ -100,8 +105,9 @@ class Game(BaseGame):
             next_sprite (bool): Is it time to draw the next sprite?
         """
         # Indicate the spachip if it is time to draw the next sprite
-        self.stick_p1.draw(next_sprite=next_sprite)
-        self.set_leds(self.stick_p1)
+        for stick in [self.stick_p1, self.stick_p2]:
+            stick.draw(next_sprite=next_sprite)
+            self.set_leds(stick)
 
         self.ball.move(next_sprite=next_sprite)
         self.set_leds(self.ball)
