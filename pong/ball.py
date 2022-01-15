@@ -56,3 +56,13 @@ class Ball(Actor):
 
         self.x += self.vx
         self.y += self.vy
+
+    def bounce(self, direction: str):
+        if direction == "left" or direction == "right":
+            self.vx = -self.vx
+
+        if direction == "up" or direction == "down":
+            self.vy = -self.vy
+
+        self.x += self.vx
+        self.y += self.vy

@@ -89,8 +89,19 @@ class Game(BaseGame):
         self.stick_p1.update(player_1["joystick"])
         self.stick_p2.update(player_2["joystick"])
 
-        # if collision(self.stick_p1, self.ball):
-        # self.ball.bounce()
+        if (
+            self.ball.left() <= self.stick_p1.left()
+            and self.ball.top() >= self.stick_p1.top()
+            and self.ball.bottom() <= self.stick_p1.bottom()
+        ):
+            self.ball.bounce(direction="right")
+
+        if (
+            self.ball.right() >= self.stick_p2.right()
+            and self.ball.top() >= self.stick_p2.top()
+            and self.ball.bottom() <= self.stick_p2.bottom()
+        ):
+            self.ball.bounce(direction="left")
 
     def draw(self, next_sprite: bool) -> None:
         """
