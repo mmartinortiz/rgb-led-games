@@ -38,6 +38,8 @@ class Game(BaseGame):
         # The ball
         self.ball = Ball(32, 32, screen_limits=screen_limits)
 
+        self.max_score = 31
+
     def loop(self):
         print("Welcome to Pong!, LED version ;-)")
 
@@ -72,7 +74,10 @@ class Game(BaseGame):
                 if self.ball.right() >= self.screen.right:
                     self.player_1_score += 1
 
-                if self.player_1_score == 32 or self.player_2_score == 32:
+                if (
+                    self.player_1_score == self.max_score
+                    or self.player_2_score == self.max_score
+                ):
                     # We have a winer! and start again :-)
                     self.player_1_score = self.player_2_score = 0
 
@@ -131,13 +136,15 @@ class Game(BaseGame):
 
         self.set_leds(self.ball)
 
-        # logger.debug((self.ball.x, self.ball.y))
         # Draw a couple of lines on the top and bottom
         for x in range(self.screen.width):
             self.screen.set_in_canvas(x, self.screen.top, (0, 0, 255))
             self.screen.set_in_canvas(x, self.screen.bottom - 1, (0, 0, 255))
+            self.screen.set_in_canvas(x, self.screen.bottom, (50, 0, 0))
 
         # Draw score
+        self.screen.set_in_canvas(31, self.screen.width - 1, (0, 0, 255))
+        self.screen.set_in_canvas(32, self.screen.width - 1, (0, 0, 255))
         for x in range(self.player_1_score):
             self.screen.set_in_canvas(x, self.screen.width - 1, (255, 0, 0))
 
