@@ -2,6 +2,8 @@ from random import randint
 from timeit import default_timer as timer
 from typing import Dict
 
+from loguru import logger
+
 from games.actor import Actor
 from pong import ASSETS_PATH
 
@@ -38,33 +40,54 @@ class Ball(Actor):
 
         return speed
 
-    def update(self, button: int):
-        # The ball does not care about the user input
-        pass
-
-    def move(self, next_sprite):
-        # Did we hit a wall?
-        if (
-            self.left() <= self.screen_limits["left"]
-            or self.right() >= self.screen_limits["right"]
-        ):
-            self.vx = -self.vx
-
-        if (
-            self.top() <= self.screen_limits["top"]
-            or self.bottom() >= self.screen_limits["bottom"]
-        ):
-            self.vy = -self.vy
-
+    def update(self, button: int = None):
         self.x += self.vx
         self.y += self.vy
 
-    def bounce(self, direction: str):
-        if direction == "left" or direction == "right":
-            self.vx = -self.rand_speed(self.vx)
+    def check_the_walls(self):
+        if self.left() <= self.screen_limits["left"]:
+            self.bounce("right", limit=self.screen_limits["left"])
+        elif self.right() >= self.screen_limits["right"]:
+            self.bounce("left", limit=self.screen_limits["right"])
+        elif self.top() <= self.screen_limits["top"]:
+            self.bounce("down", limit=self.screen_limits["top"])
+        elif self.bottom() >= self.screen_limits["bottom"]:
+            self.bounce("up", limit=self.screen_limits["bottom"])
 
-        if direction == "up" or direction == "down":
-            self.vy = -self.rand_speed(self.vy)
+    def check_safe_position(self):
+        self.x = (
+            self.x
+            if self.left() >= self.screen_limits["left"]
+            else self.screen_limits["left"]
+        )
+        self.x = (
+            self.x
+            if self.right() <= self.screen_limits["right"]
+            else self.screen_limits["right"] - self.width
+        )
+        self.y = (
+            self.y
+            if self.top() >= self.screen_limits["top"]
+            else self.screen_limits["top"]
+        )
+        self.y = (
+            self.y
+            if self.bottom() <= self.screen_limits["bottom"]
+            else self.screen_limits["bottom"] - self.height
+        )
 
-        self.x += self.vx
-        self.y += self.vy
+    def bounce(self, direction: str, limit: int, change_angle: bool = False):
+        if direction == "left":
+            self.vx = -self.rand_speed(self.vx) if change_angle else -self.vx
+            self.x = limit - self.width + 1
+        elif direction == "right":
+            self.vx = -self.rand_speed(self.vx) if change_angle else -self.vx
+            self.x = limit
+        elif direction == "down":
+            self.vy = -self.rand_speed(self.vy) if change_angle else -self.vy
+            self.y = limit
+        elif direction == "up":
+            self.vy = -self.rand_speed(self.vy) if change_angle else -self.vy
+            self.y = limit - self.height + 1
+        else:
+            logger.error(f"Unknown direction: {direction}")

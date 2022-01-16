@@ -40,4 +40,8 @@ class BaseGame(metaclass=ABCMeta):
                 x = i + actor.x
                 y = j + actor.y
 
-                self.screen.set_in_canvas(x, y, rgb)
+                try:
+                    self.screen.set_in_canvas(x, y, rgb)
+                except IndexError as e:
+                    logger.error((x, y, i, j, rgb))
+                    raise e

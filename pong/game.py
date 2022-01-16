@@ -1,7 +1,8 @@
 from timeit import default_timer as timer
 from typing import Any, Dict
 
-from games.actor import Actor
+from loguru import logger
+
 from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad
@@ -59,18 +60,17 @@ class Game(BaseGame):
                 # Update state
                 self.update(player_1, player_2)
 
+                # Draw
+                next_sprite, start = self.draw_next_sprite(start)
+                self.screen.clear_canvas()
+
+                self.draw(next_sprite=next_sprite)
+
                 if self.ball.left() <= self.screen.left:
                     self.player_2_score += 1
 
                 if self.ball.right() >= self.screen.right:
                     self.player_1_score += 1
-
-                # Draw
-                self.screen.clear_canvas()
-
-                next_sprite, start = self.draw_next_sprite(start)
-
-                self.draw(next_sprite=next_sprite)
 
                 if self.player_1_score == 32 or self.player_2_score == 32:
                     # We have a winer! and start again :-)
@@ -89,19 +89,28 @@ class Game(BaseGame):
         self.stick_p1.update(player_1["joystick"])
         self.stick_p2.update(player_2["joystick"])
 
+        self.ball.update()
+
         if (
             self.ball.left() <= self.stick_p1.left()
             and self.ball.top() >= self.stick_p1.top()
             and self.ball.bottom() <= self.stick_p1.bottom()
         ):
-            self.ball.bounce(direction="right")
+            self.ball.bounce(
+                direction="right", limit=self.stick_p1.right(), change_angle=True
+            )
 
         if (
             self.ball.right() >= self.stick_p2.right()
             and self.ball.top() >= self.stick_p2.top()
             and self.ball.bottom() <= self.stick_p2.bottom()
         ):
-            self.ball.bounce(direction="left")
+            self.ball.bounce(
+                direction="left", limit=self.stick_p2.left(), change_angle=True
+            )
+
+        self.ball.check_the_walls()
+        self.ball.check_safe_position()
 
     def draw(self, next_sprite: bool) -> None:
         """
@@ -120,9 +129,9 @@ class Game(BaseGame):
             stick.draw(next_sprite=next_sprite)
             self.set_leds(stick)
 
-        self.ball.move(next_sprite=next_sprite)
         self.set_leds(self.ball)
 
+        # logger.debug((self.ball.x, self.ball.y))
         # Draw a couple of lines on the top and bottom
         for x in range(self.screen.width):
             self.screen.set_in_canvas(x, self.screen.top, (0, 0, 255))

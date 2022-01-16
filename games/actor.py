@@ -63,7 +63,6 @@ class Actor(metaclass=ABCMeta):
         Args:
             sprites_glob (str): Path to the sprite to load, it support wildcards like *
         """
-        logger.debug(sprites_glob)
         # Each sprite is saved in a separated file
         self.sprites = [imageio.imread(image) for image in glob.iglob(sprites_glob)]
 
@@ -117,6 +116,26 @@ class Actor(metaclass=ABCMeta):
             int: Y coordinate of the actor's bottom
         """
         return self.y + self.height - 1
+
+    def top_right(self) -> Tuple[int, int]:
+        return (self.top(), self.right())
+
+    def top_left(self) -> Tuple[int, int]:
+        return (self.top(), self.left())
+
+    def bottom_right(self) -> Tuple[int, int]:
+        return (self.bottom(), self.right())
+
+    def bottom_left(self) -> Tuple[int, int]:
+        return (self.bottom(), self.left())
+
+    def rectangle(self):
+        return (
+            self.top_left(),
+            self.top_right(),
+            self.bottom_right(),
+            self.bottom_left(),
+        )
 
     @abstractclassmethod
     def update(cls, button: int) -> None:
