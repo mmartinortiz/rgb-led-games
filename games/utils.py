@@ -102,20 +102,3 @@ def get_input_device() -> InputDevice:
         selection = 0
 
     return InputDevice(available_devices[selection])
-
-
-def normalised(x: int, y: int) -> Tuple[float, float]:
-    """Return a unit vector
-    Get length of vector (x,y) - math.hypot uses Pythagoras' theorem to get length of hypotenuse
-    of right-angle triangle with sides of length x and y
-
-    Args:
-        x (int): x coordinate
-        y (int): y coordinate
-
-    Returns:
-        Tuple[float, float]: Normalized vector (x, y)
-    """
-    length = math.hypot(x, y)
-
-    return (x / length, y / length)

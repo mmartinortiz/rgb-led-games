@@ -51,14 +51,14 @@ class Alien(Actor):
         """
         if timer() - self.start > self.sprites_per_second:
             self.start = timer()
-            if self.right() < self.screen_width:
+            if self.right() < self.screen_width - 1:
                 self.x += 1
 
     def explosion(self):
         """
         Explosions are represented with a different animation
         """
-        self.load_sprites(sprites_glob=get_asset("alien-explosion_*.png"))
+        self.load_sprites(sprites_glob=self.get_asset("alien-explosion_*.png"))
 
         # Replace the iterator by one that is not cyclic
         self.sprites_it = iter(self.sprites)
