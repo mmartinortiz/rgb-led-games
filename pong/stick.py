@@ -16,16 +16,8 @@ class Stick(Actor):
         self.screen_limits = screen_limits
 
         # Correct position if starting point is out of the boundaries
-        self.x = (
-            screen_limits["right"] - self.width + 1
-            if x + self.width > screen_limits["right"]
-            else x
-        )
-        self.y = (
-            screen_limits["bottom"] - self.height + 1
-            if y + self.height > screen_limits["bottom"]
-            else y
-        )
+        self.x = x
+        self.y = y
 
     def update(self, position: int):
         if position <= self.screen_limits["top"]:

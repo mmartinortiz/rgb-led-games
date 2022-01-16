@@ -27,16 +27,21 @@ class Game(BaseGame):
             "left": screen.left,
         }
 
+        self.screen_limits = screen_limits
+
         # Player 1 stick
         middle = int(screen.height / 2)
-        self.stick_p1 = Stick(x=screen.left, y=middle, screen_limits=screen_limits)
-        self.stick_p2 = Stick(x=screen.right, y=middle, screen_limits=screen_limits)
+        self.stick_p1 = Stick(x=screen.left + 1, y=middle, screen_limits=screen_limits)
+        self.stick_p2 = Stick(x=screen.right - 2, y=middle, screen_limits=screen_limits)
 
         self.player_1_score = 0
         self.player_2_score = 0
 
         # The ball
         self.ball = Ball(32, 32, screen_limits=screen_limits)
+
+        self.left_impact = False
+        self.right_impact = False
 
         self.max_score = 31
 
@@ -70,9 +75,11 @@ class Game(BaseGame):
 
                 if self.ball.left() <= self.screen.left:
                     self.player_2_score += 1
+                    self.left_impact = True
 
                 if self.ball.right() >= self.screen.right:
                     self.player_1_score += 1
+                    self.right_impact = True
 
                 if (
                     self.player_1_score == self.max_score
@@ -117,6 +124,10 @@ class Game(BaseGame):
         self.ball.check_the_walls()
         self.ball.check_safe_position()
 
+    def draw_impact(self, x):
+        for y in range(self.screen_limits["top"], self.screen_limits["bottom"]):
+            self.screen.set_in_canvas(x, y, (200, 200, 200))
+
     def draw(self, next_sprite: bool) -> None:
         """
         Draw the game status in the screen. Drawing is composed of
@@ -135,6 +146,14 @@ class Game(BaseGame):
             self.set_leds(stick)
 
         self.set_leds(self.ball)
+
+        if self.left_impact:
+            self.draw_impact(self.screen_limits["left"])
+            self.left_impact = False
+
+        if self.right_impact:
+            self.draw_impact(self.screen_limits["right"])
+            self.right_impact = False
 
         # Draw a couple of lines on the top and bottom
         for x in range(self.screen.width):
