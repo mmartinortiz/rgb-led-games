@@ -54,7 +54,7 @@ class Army:
         Generates a new army of aliens!
         """
         # Distribute the aliens across the screen
-        dummy_alien = Alien(0, 0)
+        dummy_alien = Alien(0, 0, 0, 0)
         horizontal_space = int(self.screen_width / self.number_of_aliens_per_row)
         vertical_space = dummy_alien.height + 2
 
@@ -85,7 +85,7 @@ class Army:
             else:
                 self.moving = "right"
                 most_right = max([a.right() for a in self.aliens])
-                if most_right < self.screen_width:
+                if most_right < self.screen_width - 1:
                     for alien in self.aliens:
                         alien.move_right()
                 else:
