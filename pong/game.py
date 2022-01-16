@@ -104,18 +104,18 @@ class Game(BaseGame):
         self.ball.update()
 
         if (
-            self.ball.left() <= self.stick_p1.left()
-            and self.ball.top() >= self.stick_p1.top()
-            and self.ball.bottom() <= self.stick_p1.bottom()
+            self.ball.left() <= self.stick_p1.right()
+            and self.ball.bottom() >= self.stick_p1.top()
+            and self.ball.top() <= self.stick_p1.bottom()
         ):
             self.ball.bounce(
                 direction="right", limit=self.stick_p1.right(), change_angle=True
             )
 
         if (
-            self.ball.right() >= self.stick_p2.right()
-            and self.ball.top() >= self.stick_p2.top()
-            and self.ball.bottom() <= self.stick_p2.bottom()
+            self.ball.right() >= self.stick_p2.left()
+            and self.ball.bottom() >= self.stick_p2.top()
+            and self.ball.top() <= self.stick_p2.bottom()
         ):
             self.ball.bounce(
                 direction="left", limit=self.stick_p2.left(), change_angle=True
