@@ -1,10 +1,19 @@
 import math
+from dataclasses import dataclass
 from typing import Tuple
 
 from evdev import InputDevice, InputEvent, ecodes, list_devices
 from loguru import logger
 
 import games.definitions as d
+
+
+@dataclass
+class ScreenLimits:
+    top: int
+    bottom: int
+    left: int
+    right: int
 
 
 def get_key(event: InputEvent) -> int:

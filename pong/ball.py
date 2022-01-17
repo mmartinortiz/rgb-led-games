@@ -5,6 +5,7 @@ from typing import Dict
 from loguru import logger
 
 from games.actor import Actor
+from games.utils import ScreenLimits
 from pong import ASSETS_PATH
 
 
@@ -13,7 +14,7 @@ class Ball(Actor):
     An alien, the bad guy of the game
     """
 
-    def __init__(self, x: int, y: int, screen_limits: Dict[str, str]):
+    def __init__(self, x: int, y: int, screen_limits: ScreenLimits):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("ball_*.png"))
 
@@ -45,35 +46,33 @@ class Ball(Actor):
         self.y += self.vy
 
     def check_the_walls(self):
-        if self.left() <= self.screen_limits["left"]:
-            self.bounce("right", limit=self.screen_limits["left"])
-        elif self.right() >= self.screen_limits["right"]:
-            self.bounce("left", limit=self.screen_limits["right"])
-        elif self.top() <= self.screen_limits["top"]:
-            self.bounce("down", limit=self.screen_limits["top"])
-        elif self.bottom() >= self.screen_limits["bottom"]:
-            self.bounce("up", limit=self.screen_limits["bottom"])
+        if self.left() <= self.screen_limits.left:
+            self.bounce("right", limit=self.screen_limits.left)
+        elif self.right() >= self.screen_limits.right:
+            self.bounce("left", limit=self.screen_limits.right)
+        elif self.top() <= self.screen_limits.top:
+            self.bounce("down", limit=self.screen_limits.top)
+        elif self.bottom() >= self.screen_limits.bottom:
+            self.bounce("up", limit=self.screen_limits.bottom)
 
     def check_safe_position(self):
         self.x = (
             self.x
-            if self.left() >= self.screen_limits["left"]
-            else self.screen_limits["left"]
+            if self.left() >= self.screen_limits.left
+            else self.screen_limits.left
         )
         self.x = (
             self.x
-            if self.right() <= self.screen_limits["right"]
-            else self.screen_limits["right"] - self.width
+            if self.right() <= self.screen_limits.right
+            else self.screen_limits.right - self.width
+        )
+        self.y = (
+            self.y if self.top() >= self.screen_limits.top else self.screen_limits.top
         )
         self.y = (
             self.y
-            if self.top() >= self.screen_limits["top"]
-            else self.screen_limits["top"]
-        )
-        self.y = (
-            self.y
-            if self.bottom() <= self.screen_limits["bottom"]
-            else self.screen_limits["bottom"] - self.height
+            if self.bottom() <= self.screen_limits.bottom
+            else self.screen_limits.bottom - self.height
         )
 
     def bounce(self, direction: str, limit: int, change_angle: bool = False):

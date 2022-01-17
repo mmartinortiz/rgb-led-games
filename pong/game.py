@@ -6,6 +6,7 @@ from loguru import logger
 from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad
+from games.utils import ScreenLimits
 from pong.ball import Ball
 from pong.stick import Stick
 
@@ -20,12 +21,12 @@ class Game(BaseGame):
 
         # Screen where things are drawn
         self.screen = screen
-        screen_limits = {
-            "top": screen.top + 1,
-            "bottom": screen.bottom - 1,
-            "right": screen.right,
-            "left": screen.left,
-        }
+        screen_limits = ScreenLimits(
+            top=screen.top + 1,
+            bottom=screen.bottom - 1,
+            right=screen.right,
+            left=screen.left,
+        )
 
         self.screen_limits = screen_limits
 
