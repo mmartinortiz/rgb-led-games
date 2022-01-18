@@ -169,7 +169,6 @@ class Game(BaseGame):
             self.set_leds(stick)
 
         self.set_leds(self.ball)
-        logger.debug(self.ball.rect)
 
         if self.left_impact:
             self.draw_impact(self.screen_limits.left)
