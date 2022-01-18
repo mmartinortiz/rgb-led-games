@@ -49,8 +49,8 @@ class Game(BaseGame):
     def loop(self):
         print("Welcome to Pong!, LED version ;-)")
 
-        gamepad_p1 = Gamepad(joystick="A0", button=None, scale=(0, self.screen.height))
-        gamepad_p2 = Gamepad(joystick="A1", button=None, scale=(0, self.screen.height))
+        gamepad_p1 = Gamepad(joystick="A2", button=None, scale=(0, self.screen.height))
+        gamepad_p2 = Gamepad(joystick="A3", button=None, scale=(0, self.screen.height))
 
         start = timer()
 

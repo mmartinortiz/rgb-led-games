@@ -46,7 +46,7 @@ class Game(BaseGame):
         print("Welcome to Space Invarers, LED version ;-)")
         start = timer()
         # Gamepad, will provide input from the user to the game
-        gamepad = Gamepad(joystick="A0", button="D3", scale=(0, self.screen.height))
+        gamepad = Gamepad(joystick="A2", button="D7", scale=(0, self.screen.height))
 
         bye = False
         while not bye:
