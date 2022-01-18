@@ -59,13 +59,13 @@ class Ball(Actor):
 
     def check_the_walls(self):
         """Check if the ball collides with a wall"""
-        if self.left() <= self.screen_limits.left:
+        if self.left <= self.screen_limits.left:
             self.bounce(Direction.RIGHT, limit=self.screen_limits.left)
-        elif self.right() >= self.screen_limits.right:
+        elif self.right >= self.screen_limits.right:
             self.bounce(Direction.LEFT, limit=self.screen_limits.right)
-        elif self.top() <= self.screen_limits.top:
+        elif self.top <= self.screen_limits.top:
             self.bounce(Direction.DOWN, limit=self.screen_limits.top)
-        elif self.bottom() >= self.screen_limits.bottom:
+        elif self.bottom >= self.screen_limits.bottom:
             self.bounce(Direction.UP, limit=self.screen_limits.bottom)
 
     def check_safe_position(self):
@@ -73,21 +73,19 @@ class Ball(Actor):
         not, its position is corrected to be within the screen limits
         """
         self.x = (
-            self.x
-            if self.left() >= self.screen_limits.left
-            else self.screen_limits.left
+            self.x if self.left >= self.screen_limits.left else self.screen_limits.left
         )
         self.x = (
             self.x
-            if self.right() <= self.screen_limits.right
+            if self.right <= self.screen_limits.right
             else self.screen_limits.right - self.width
         )
         self.y = (
-            self.y if self.top() >= self.screen_limits.top else self.screen_limits.top
+            self.y if self.top >= self.screen_limits.top else self.screen_limits.top
         )
         self.y = (
             self.y
-            if self.bottom() <= self.screen_limits.bottom
+            if self.bottom <= self.screen_limits.bottom
             else self.screen_limits.bottom - self.height
         )
 

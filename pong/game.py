@@ -82,11 +82,11 @@ class Game(BaseGame):
                 self.draw(next_sprite=next_sprite)
 
                 # Check if any of the players have scored
-                if self.ball.left() <= self.screen.left:
+                if self.ball.left <= self.screen.left:
                     self.player_2_score += 1
                     self.left_impact = True
 
-                if self.ball.right() >= self.screen.right:
+                if self.ball.right >= self.screen.right:
                     self.player_1_score += 1
                     self.right_impact = True
 
@@ -117,23 +117,23 @@ class Game(BaseGame):
 
         # Check if the ball has hit one of the sticks
         if (
-            self.ball.left() <= self.stick_p1.right()
-            and self.ball.bottom() >= self.stick_p1.top()
-            and self.ball.top() <= self.stick_p1.bottom()
+            self.ball.left <= self.stick_p1.right
+            and self.ball.bottom >= self.stick_p1.top
+            and self.ball.top <= self.stick_p1.bottom
         ):
             self.ball.bounce(
                 direction=Direction.RIGHT,
-                limit=self.stick_p1.right(),
+                limit=self.stick_p1.right,
                 change_angle=True,
             )
 
         if (
-            self.ball.right() >= self.stick_p2.left()
-            and self.ball.bottom() >= self.stick_p2.top()
-            and self.ball.top() <= self.stick_p2.bottom()
+            self.ball.right >= self.stick_p2.left
+            and self.ball.bottom >= self.stick_p2.top
+            and self.ball.top <= self.stick_p2.bottom
         ):
             self.ball.bounce(
-                direction=Direction.LEFT, limit=self.stick_p2.left(), change_angle=True
+                direction=Direction.LEFT, limit=self.stick_p2.left, change_angle=True
             )
 
         # Check if the ball hits the wall
@@ -169,6 +169,7 @@ class Game(BaseGame):
             self.set_leds(stick)
 
         self.set_leds(self.ball)
+        logger.debug(self.ball.rect)
 
         if self.left_impact:
             self.draw_impact(self.screen_limits.left)

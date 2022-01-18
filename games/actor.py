@@ -9,6 +9,8 @@ import imageio
 from loguru import logger
 from numpy import ndarray
 
+from games import Coordinate, Rect
+
 
 class Actor(metaclass=ABCMeta):
     """
@@ -81,6 +83,7 @@ class Actor(metaclass=ABCMeta):
         # Flag for showing actors
         self.show = True
 
+    @property
     def left(self) -> int:
         """
         "Left side" of the actor, as a coordinate of the screen
@@ -90,6 +93,7 @@ class Actor(metaclass=ABCMeta):
         """
         return self.x
 
+    @property
     def right(self) -> int:
         """
         "Right side" of the actor, as a coordinate of the screen
@@ -99,6 +103,7 @@ class Actor(metaclass=ABCMeta):
         """
         return self.x + self.width - 1
 
+    @property
     def top(self) -> int:
         """
         "Top" of the actor, as a coordinate of the screen
@@ -108,6 +113,7 @@ class Actor(metaclass=ABCMeta):
         """
         return self.y
 
+    @property
     def bottom(self) -> int:
         """
         Bottom of the actor, as a screen coordinate
@@ -117,24 +123,39 @@ class Actor(metaclass=ABCMeta):
         """
         return self.y + self.height - 1
 
-    def top_right(self) -> Tuple[int, int]:
-        return (self.top(), self.right())
+    @property
+    def top_right(self) -> Coordinate:
+        return (self.top, self.right)
 
-    def top_left(self) -> Tuple[int, int]:
-        return (self.top(), self.left())
+    @property
+    def top_left(self) -> Coordinate:
+        return (self.top, self.left)
 
-    def bottom_right(self) -> Tuple[int, int]:
-        return (self.bottom(), self.right())
+    @property
+    def bottom_right(self) -> Coordinate:
+        return (self.bottom, self.right)
 
-    def bottom_left(self) -> Tuple[int, int]:
-        return (self.bottom(), self.left())
+    @property
+    def bottom_left(self) -> Coordinate:
+        return (self.bottom, self.left)
 
-    def rectangle(self):
-        return (
-            self.top_left(),
-            self.top_right(),
-            self.bottom_right(),
-            self.bottom_left(),
+    @property
+    def rect(self) -> Rect:
+        """Rectangle with the coordinates of the:
+
+        - top_left
+        - top_right
+        - bottom_left
+        - bottom_right
+
+        Returns:
+            Rect: Rectangle object
+        """
+        return Rect(
+            top_left=self.top_left,
+            top_right=self.top_right,
+            bottom_right=self.bottom_right,
+            bottom_left=self.bottom_left,
         )
 
     @abstractclassmethod
