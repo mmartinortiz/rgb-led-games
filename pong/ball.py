@@ -1,9 +1,8 @@
 from random import randint
-from timeit import default_timer as timer
-from typing import Dict
 
 from loguru import logger
 
+from games import Direction
 from games.actor import Actor
 from games.utils import ScreenLimits
 from pong import ASSETS_PATH
@@ -28,34 +27,51 @@ class Ball(Actor):
         self.vx = self.rand_speed()
         self.vy = self.rand_speed()
 
-        self.start = timer()
-
     @staticmethod
-    def rand_speed(current_speed: int = None):
+    def rand_speed(
+        current_speed: int = None, minimum: int = -3, maximum: int = 3
+    ) -> int:
+        """Returns a random spreed between `minimum` and `maximum`. If `current_speed` is passed,
+        the sign of the returned speed will be the inverted value. For example, if `current_speed`
+        is -3, the returned speed will be between 1 and 3
+
+        Args:
+            current_speed (int, optional): Current speed; to be excluded from the returned values. Defaults to None.
+            minimum (int, optional): Minimum value to return. Defaults to -3.
+            maximum (int, optional): Maximum value to return. Defaults to 3.
+
+        Returns:
+            int: A random speed
+        """
         if current_speed:
-            return randint(1, 3) if current_speed > 0 else randint(-3, -1)
+            return randint(1, maximum) if current_speed > 0 else randint(minimum, -1)
 
         speed = 0
         while speed == 0:
-            speed = randint(-3, 3)
+            speed = randint(-minimum, maximum)
 
         return speed
 
-    def update(self, button: int = None):
+    def update(self):
+        """Update ball position according to its own speed"""
         self.x += self.vx
         self.y += self.vy
 
     def check_the_walls(self):
+        """Check if the ball collides with a wall"""
         if self.left() <= self.screen_limits.left:
-            self.bounce("right", limit=self.screen_limits.left)
+            self.bounce(Direction.RIGHT, limit=self.screen_limits.left)
         elif self.right() >= self.screen_limits.right:
-            self.bounce("left", limit=self.screen_limits.right)
+            self.bounce(Direction.LEFT, limit=self.screen_limits.right)
         elif self.top() <= self.screen_limits.top:
-            self.bounce("down", limit=self.screen_limits.top)
+            self.bounce(Direction.DOWN, limit=self.screen_limits.top)
         elif self.bottom() >= self.screen_limits.bottom:
-            self.bounce("up", limit=self.screen_limits.bottom)
+            self.bounce(Direction.UP, limit=self.screen_limits.bottom)
 
     def check_safe_position(self):
+        """Check if the ball is within the screen limits. If it is
+        not, its position is corrected to be within the screen limits
+        """
         self.x = (
             self.x
             if self.left() >= self.screen_limits.left
@@ -75,17 +91,25 @@ class Ball(Actor):
             else self.screen_limits.bottom - self.height
         )
 
-    def bounce(self, direction: str, limit: int, change_angle: bool = False):
-        if direction == "left":
+    def bounce(self, direction: Direction, limit: int, change_angle: bool = False):
+        """Update the ball speed and position to simulate a bounce
+
+        Args:
+            direction (str): New direction of the ball
+            limit (int): Coordinte (`x` or `y`, depending on the direction) describing
+            the limits that cannot be passed by the ball
+            change_angle (bool, optional): Should the ball change the current angle after bouncing?. Defaults to False.
+        """
+        if direction is Direction.LEFT:
             self.vx = -self.rand_speed(self.vx) if change_angle else -self.vx
             self.x = limit - self.width + 1
-        elif direction == "right":
+        elif direction is Direction.RIGHT:
             self.vx = -self.rand_speed(self.vx) if change_angle else -self.vx
             self.x = limit
-        elif direction == "down":
+        elif direction is Direction.DOWN:
             self.vy = -self.rand_speed(self.vy) if change_angle else -self.vy
             self.y = limit
-        elif direction == "up":
+        elif direction is Direction.UP:
             self.vy = -self.rand_speed(self.vy) if change_angle else -self.vy
             self.y = limit - self.height + 1
         else:

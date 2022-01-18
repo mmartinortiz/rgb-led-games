@@ -7,7 +7,7 @@ from pong import ASSETS_PATH
 
 class Stick(Actor):
     """
-    The spaceship is the good guy, the one controlled by the player
+    Player representation on the Pong game
     """
 
     def __init__(self, x, y, screen_limits=ScreenLimits):
@@ -16,14 +16,20 @@ class Stick(Actor):
 
         self.screen_limits = screen_limits
 
-        # Correct position if starting point is out of the boundaries
+        # Starting position of the stick
         self.x = x
         self.y = y
 
-    def update(self, position: int):
-        if position <= self.screen_limits.top:
+    def update(self, y: int):
+        """Update the stick position accoring to user input and
+        screen limits
+
+        Args:
+            y (int): New position on y axis
+        """
+        if y <= self.screen_limits.top:
             self.y = self.screen_limits.top
-        elif position >= self.screen_limits.bottom - self.height:
+        elif y >= self.screen_limits.bottom - self.height:
             self.y = self.screen_limits.bottom - self.height
         else:
-            self.y = position
+            self.y = y

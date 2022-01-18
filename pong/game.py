@@ -3,7 +3,9 @@ from typing import Any, Dict
 
 from loguru import logger
 
+from games import Direction
 from games.base_game import BaseGame
+from games.colors import BLUE, PALE_RED, PALE_WHITE, RED, Color
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad
 from games.utils import ScreenLimits
@@ -41,9 +43,11 @@ class Game(BaseGame):
         # The ball
         self.ball = Ball(32, 32, screen_limits=screen_limits)
 
+        # Animation for the impact of the ball
         self.left_impact = False
         self.right_impact = False
 
+        # Maximum score. Once the score is reach, the game restarts
         self.max_score = 31
 
     def loop(self):
@@ -69,11 +73,15 @@ class Game(BaseGame):
                 self.update(player_1, player_2)
 
                 # Draw
+                # Determine if a new sprite needs to be drawn
                 next_sprite, start = self.draw_next_sprite(start)
+
+                # Clear the canvas before we starting drawing
                 self.screen.clear_canvas()
 
                 self.draw(next_sprite=next_sprite)
 
+                # Check if any of the players have scored
                 if self.ball.left() <= self.screen.left:
                     self.player_2_score += 1
                     self.left_impact = True
@@ -82,6 +90,7 @@ class Game(BaseGame):
                     self.player_1_score += 1
                     self.right_impact = True
 
+                # Did anybory win?
                 if (
                     self.player_1_score == self.max_score
                     or self.player_2_score == self.max_score
@@ -93,24 +102,29 @@ class Game(BaseGame):
                 bye = True
 
     def update(self, player_1: Dict[str, Any], player_2: Dict[str, Any]) -> None:
-        """
-        Update the game status
+        """Update the game status with the player's input
 
         Args:
-            button (int): Button pressed by the player
+            player_1 (Dict[str, Any]): Player 1 input
+            player_2 (Dict[str, Any]): Player 2 input
         """
+        # Update sticks position
         self.stick_p1.update(player_1["joystick"])
         self.stick_p2.update(player_2["joystick"])
 
+        # Update the ball position
         self.ball.update()
 
+        # Check if the ball has hit one of the sticks
         if (
             self.ball.left() <= self.stick_p1.right()
             and self.ball.bottom() >= self.stick_p1.top()
             and self.ball.top() <= self.stick_p1.bottom()
         ):
             self.ball.bounce(
-                direction="right", limit=self.stick_p1.right(), change_angle=True
+                direction=Direction.RIGHT,
+                limit=self.stick_p1.right(),
+                change_angle=True,
             )
 
         if (
@@ -119,15 +133,23 @@ class Game(BaseGame):
             and self.ball.top() <= self.stick_p2.bottom()
         ):
             self.ball.bounce(
-                direction="left", limit=self.stick_p2.left(), change_angle=True
+                direction=Direction.LEFT, limit=self.stick_p2.left(), change_angle=True
             )
 
+        # Check if the ball hits the wall
         self.ball.check_the_walls()
+
+        # Correct the ball position if needed
         self.ball.check_safe_position()
 
-    def draw_impact(self, x):
-        for y in range(self.screen_limits["top"], self.screen_limits["bottom"]):
-            self.screen.set_in_canvas(x, y, (200, 200, 200))
+    def draw_impact(self, x: int, color: Color = PALE_WHITE):
+        """Draws an animation to show the impact of the ball in a wall
+
+        Args:
+            x (int): Position of the x axis where the impact happen
+        """
+        for y in range(self.screen_limits.top, self.screen_limits.bottom):
+            self.screen.set_in_canvas(x, y, color)
 
     def draw(self, next_sprite: bool) -> None:
         """
@@ -149,28 +171,28 @@ class Game(BaseGame):
         self.set_leds(self.ball)
 
         if self.left_impact:
-            self.draw_impact(self.screen_limits["left"])
+            self.draw_impact(self.screen_limits.left)
             self.left_impact = False
 
         if self.right_impact:
-            self.draw_impact(self.screen_limits["right"])
+            self.draw_impact(self.screen_limits.right)
             self.right_impact = False
 
         # Draw a couple of lines on the top and bottom
         for x in range(self.screen.width):
-            self.screen.set_in_canvas(x, self.screen.top, (0, 0, 255))
-            self.screen.set_in_canvas(x, self.screen.bottom - 1, (0, 0, 255))
-            self.screen.set_in_canvas(x, self.screen.bottom, (50, 0, 0))
+            self.screen.set_in_canvas(x, self.screen.top, BLUE)
+            self.screen.set_in_canvas(x, self.screen.bottom - 1, BLUE)
+            self.screen.set_in_canvas(x, self.screen.bottom, PALE_RED)
 
         # Draw score
-        self.screen.set_in_canvas(31, self.screen.width - 1, (0, 0, 255))
-        self.screen.set_in_canvas(32, self.screen.width - 1, (0, 0, 255))
+        self.screen.set_in_canvas(31, self.screen.width - 1, BLUE)
+        self.screen.set_in_canvas(32, self.screen.width - 1, BLUE)
         for x in range(self.player_1_score):
-            self.screen.set_in_canvas(x, self.screen.width - 1, (255, 0, 0))
+            self.screen.set_in_canvas(x, self.screen.width - 1, RED)
 
         for x in range(self.player_2_score):
             self.screen.set_in_canvas(
-                self.screen.height - x - 1, self.screen.width - 1, (255, 0, 0)
+                self.screen.height - x - 1, self.screen.width - 1, RED
             )
 
         # Finally, draw the canvas
