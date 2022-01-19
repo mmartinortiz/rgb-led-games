@@ -2,10 +2,13 @@ from itertools import product
 from timeit import default_timer as timer
 from typing import Any, Dict
 
+from loguru import logger
+
 from games.actor import Actor
 from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad
+from games.utils import ScreenLimits
 from invaders.army import Army
 from invaders.bullet import Bullet
 from invaders.spaceship import Spaceship
@@ -21,20 +24,24 @@ class Game(BaseGame):
         # Screen where things are drawn
         self.screen = screen
 
+        screen_limits = ScreenLimits(
+            top=0, bottom=screen.height - 1, left=0, right=screen.width - 1
+        )
+
+        self.screen_limits = screen_limits
+
         # The spaceship
         self.spaceship = Spaceship(
-            screen_height=screen.height, screen_width=screen.width
+            x=screen_limits.right / 2,
+            y=screen_limits.bottom,
+            screen_limits=screen_limits,
         )
 
         # Bullets, none so far
         self.bullets = []
 
         # The army of aliens
-        self.army = Army(
-            number_of_aliens_per_row=4,
-            screen_width=screen.width,
-            screen_height=screen.height,
-        )
+        self.army = Army(number_of_aliens_per_row=4, screen_limits=screen_limits)
 
         # Set a delay of 2 seconds between bullets
         # This will slow down the player capacity
@@ -85,14 +92,7 @@ class Game(BaseGame):
         """
         if timer() - self.last_bullet_at > self.lapse_between_bullets:
             self.last_bullet_at = timer()
-            self.bullets.append(
-                Bullet(
-                    x=x,
-                    y=y,
-                    screen_height=self.screen.height,
-                    screen_width=self.screen.width,
-                )
-            )
+            self.bullets.append(Bullet(x=x, y=y, screen_limits=self.screen_limits))
 
     def update(self, user_input: Dict[str, Any]) -> None:
         """Update the game status according to the use rinput
@@ -106,9 +106,9 @@ class Game(BaseGame):
         # Create new bullets
         if user_input["button"]:
             self.new_bullet(
+                x=self.spaceship.left + 2,
+                y=self.spaceship.top - 6
                 # Todo: calculate coordinates programatically
-                x=self.spaceship.x + 2,
-                y=self.spaceship.y - self.spaceship.shape[1] + 4,
             )
 
         # Move the aliens army
@@ -121,10 +121,10 @@ class Game(BaseGame):
         # Any bullet impacted an alien?
         for bullet, alien in product(self.bullets, self.army.aliens):
             if (
-                bullet.top() <= alien.bottom()
-                and bullet.bottom() >= alien.top()
-                and bullet.left() >= alien.left()
-                and bullet.right() <= alien.right()
+                bullet.top <= alien.bottom
+                and bullet.bottom >= alien.top
+                and bullet.left >= alien.left
+                and bullet.right <= alien.right
             ):
                 # Impact! "Hide" the bullet
                 bullet.show = False
@@ -137,7 +137,9 @@ class Game(BaseGame):
         self.army.update_army()
 
         # Keep only those bullets that are "in the screen"
-        self.bullets = [bullet for bullet in self.bullets if bullet.y > 0]
+        self.bullets = [
+            bullet for bullet in self.bullets if bullet.top > self.screen_limits.top
+        ]
 
     def draw(self, next_sprite: bool) -> None:
         """

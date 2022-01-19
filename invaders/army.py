@@ -1,3 +1,4 @@
+from games.utils import ScreenLimits
 from invaders.alien import Alien
 
 
@@ -21,23 +22,15 @@ class Army:
         screen_height (int, optional): [description]. Defaults to None.
     """
 
-    number_of_aliens_per_row: int = 4
-    rows_of_aliens: int = 2
-    strategy: Strategy = Strategy.SYNC_LEFT_RIGHT
-    screen_width: int = None
-    screen_height: int = None
-
     def __init__(
         self,
+        screen_limits: ScreenLimits,
         number_of_aliens_per_row: int = 4,
         rows_of_aliens: int = 2,
         strategy: Strategy = None,
-        screen_width: int = None,
-        screen_height: int = None,
     ):
         self.strategy = Strategy.SYNC_LEFT_RIGHT if strategy is None else strategy
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_limits = screen_limits
 
         # Two rows of aliens, 4 aliens per row
         self.rows_of_aliens = rows_of_aliens
@@ -54,16 +47,15 @@ class Army:
         Generates a new army of aliens!
         """
         # Distribute the aliens across the screen
-        dummy_alien = Alien(0, 0, 0, 0)
-        horizontal_space = int(self.screen_width / self.number_of_aliens_per_row)
+        dummy_alien = Alien(0, 0, self.screen_limits)
+        horizontal_space = int(self.screen_limits.right / self.number_of_aliens_per_row)
         vertical_space = dummy_alien.height + 2
 
         self.aliens = [
             Alien(
                 x=horizontal_space * i,
                 y=vertical_space * j,
-                screen_height=self.screen_height,
-                screen_width=self.screen_width,
+                screen_limits=self.screen_limits,
             )
             for j in range(self.rows_of_aliens)
             for i in range(self.number_of_aliens_per_row)
@@ -77,15 +69,15 @@ class Army:
             self._generate_new_aliens_army()
 
         if self.strategy == Strategy.SYNC_LEFT_RIGHT:
-            most_left = min([a.left() for a in self.aliens])
-            if most_left > 0 and self.moving == "left":
+            most_left = min([a.left for a in self.aliens])
+            if most_left > self.screen_limits.left and self.moving == "left":
                 for alien in self.aliens:
                     alien.move_left()
 
             else:
                 self.moving = "right"
-                most_right = max([a.right() for a in self.aliens])
-                if most_right < self.screen_width - 1:
+                most_right = max([a.right for a in self.aliens])
+                if most_right < self.screen_limits.right:
                     for alien in self.aliens:
                         alien.move_right()
                 else:

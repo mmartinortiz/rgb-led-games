@@ -2,6 +2,7 @@ import os
 from timeit import default_timer as timer
 
 from games.actor import Actor
+from games.utils import ScreenLimits
 from invaders import ASSETS_PATH
 
 
@@ -11,13 +12,16 @@ class Alien(Actor):
     """
 
     def __init__(
-        self, x, y, screen_width=None, screen_height=None, sprites_per_second=1 / 6
+        self,
+        x: int,
+        y: int,
+        screen_limits: ScreenLimits,
+        sprites_per_second: float = 1 / 6,
     ):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("alien_*.png"))
 
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_limits = screen_limits
 
         # Starting position
         self.x = x
@@ -39,7 +43,7 @@ class Alien(Actor):
         """
         if timer() - self.start > self.sprites_per_second:
             self.start = timer()
-            if self.left() > 0:
+            if self.left > self.screen_limits.left:
                 self.x -= 1
 
     def move_right(self):
@@ -51,7 +55,7 @@ class Alien(Actor):
         """
         if timer() - self.start > self.sprites_per_second:
             self.start = timer()
-            if self.right() < self.screen_width - 1:
+            if self.right < self.screen_limits.right:
                 self.x += 1
 
     def explosion(self):

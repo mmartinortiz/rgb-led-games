@@ -1,6 +1,9 @@
 from timeit import default_timer as timer
 
+from loguru import logger
+
 from games.actor import Actor
+from games.utils import ScreenLimits
 from invaders import ASSETS_PATH
 
 
@@ -10,13 +13,12 @@ class Bullet(Actor):
     """
 
     def __init__(
-        self, x, y, screen_width=None, screen_height=None, sprites_per_second=1 / 6
+        self, x: int, y: int, screen_limits: ScreenLimits, sprites_per_second=1 / 6
     ):
         super().__init__(assets_path=ASSETS_PATH)
         self.load_sprites(sprites_glob=self.get_asset("bullet_*.png"))
 
-        self.screen_width = screen_width
-        self.screen_height = screen_height
+        self.screen_limits = screen_limits
 
         self.x = x
         self.y = y
@@ -26,5 +28,8 @@ class Bullet(Actor):
     def update(self, button: int):
         if timer() - self.start > self.sprites_per_second:
             self.start = timer()
-            if self.top() > 0 and self.bottom() < self.screen_width:
+            if (
+                self.top > self.screen_limits.top
+                and self.bottom < self.screen_limits.bottom
+            ):
                 self.y -= 1
