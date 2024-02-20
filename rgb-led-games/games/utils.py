@@ -1,6 +1,4 @@
-import math
 from dataclasses import dataclass
-from typing import Tuple
 
 from evdev import InputDevice, InputEvent, ecodes, list_devices
 from loguru import logger

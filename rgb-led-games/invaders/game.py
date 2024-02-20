@@ -2,9 +2,7 @@ from itertools import product
 from timeit import default_timer as timer
 from typing import Any, Dict
 
-from loguru import logger
 
-from games.actor import Actor
 from games.base_game import BaseGame
 from games.flaschen_screen import FlaschenScreen
 from games.gamepad import Gamepad

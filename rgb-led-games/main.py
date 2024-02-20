@@ -1,8 +1,6 @@
 import argparse
 
-from loguru import logger
 
-import games.definitions as d
 from games.flaschen_screen import FlaschenScreen
 from invaders.game import Game as Invaders
 from pong.game import Game as Pong

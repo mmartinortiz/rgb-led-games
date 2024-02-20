@@ -1,6 +1,5 @@
 from timeit import default_timer as timer
 
-from loguru import logger
 
 from games.actor import Actor
 from games.utils import ScreenLimits

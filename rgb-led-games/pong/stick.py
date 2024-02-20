@@ -1,4 +1,3 @@
-from typing import Dict
 
 from games.actor import Actor
 from games.utils import ScreenLimits

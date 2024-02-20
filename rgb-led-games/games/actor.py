@@ -6,7 +6,6 @@ from os import PathLike
 from typing import Iterable, List, Tuple
 
 import imageio
-from loguru import logger
 from numpy import ndarray
 
 from games import Coordinate, Rect

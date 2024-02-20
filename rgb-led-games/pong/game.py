@@ -1,7 +1,6 @@
 from timeit import default_timer as timer
 from typing import Any, Dict
 
-from loguru import logger
 
 from games import Direction
 from games.base_game import BaseGame
