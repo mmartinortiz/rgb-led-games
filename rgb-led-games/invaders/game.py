@@ -107,7 +107,7 @@ class Game(BaseGame):
         if user_input["button"]:
             self.new_bullet(
                 x=self.spaceship.left + 2,
-                y=self.spaceship.top - 6
+                y=self.spaceship.top - 6,
                 # Todo: calculate coordinates programatically
             )
 

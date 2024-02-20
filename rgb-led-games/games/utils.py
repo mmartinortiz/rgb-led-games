@@ -91,7 +91,6 @@ def get_input_device() -> InputDevice:
         logger.error("No gamepads detected, exiting.")
         exit(1)
     elif len(available_devices) > 1:
-
         for i, device in enumerate(available_devices):
             print(f"[{i}] - {device}")
         done = False
