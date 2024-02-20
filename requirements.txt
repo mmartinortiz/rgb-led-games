@@ -1,12 +1,4 @@
-black==21.12b0
-evdev==1.4.0
-flake8==4.0.1
-imageio==2.13.5
-isort==5.10.1
-loguru==0.5.3
-numpy==1.21.5
-opencv-python==4.5.5.62
-pitop==0.21.0
-pitopcommon==0.8.10
-pytest==6.2.5
-pyzmq==22.3.0
+evdev==1.6.1
+loguru==0.7.2
+pytest>=8.0.0
+ruff==0.2.2
