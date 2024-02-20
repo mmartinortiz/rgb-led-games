@@ -49,6 +49,14 @@ List of resources for wood boxes:
 
 ### The Flaschen Taschen server
 
+```bash
+# If this repo has not been cloned
+git clone --recurse-submodules ...
+
+# If the repo has already been cloned
+git submodule update --init --recursive
+```
+
 The RGB Matrix library needs to be run as root for accessing the timer of the Raspberry Pi (More [here](https://github.com/hzeller/rpi-rgb-led-matrix#running-as-root) [here](https://github.com/hzeller/rpi-rgb-led-matrix/issues/680) or [here](https://github.com/hzeller/rpi-rgb-led-matrix/issues/672)). I had problems to run the game as root and get access to the joystick, so I went with a solution proposed [here](https://github.com/hzeller/rpi-rgb-led-matrix/issues/672#issuecomment-408640514):
 
 1. Start a server (as root) that will listen for specific messages and write the images into the screen
@@ -89,7 +97,11 @@ If it looks too big in your screen use the `--hd-terminal` option.
 1. Create a virtual environment for your project (always a good practice) (you will need to install `python3-venv` with `sudo apt install python3-venv` the first time)
 
 ```bash
-python3 -m venv venv
+# When using Pi-Top[4], the system's pitop package will work flawless, while
+# the one installed via pip will give some dependencies headaches. To avoid
+# this problems, just use the system packages and override some specific
+# dependencies
+python3 -m venv venv --system-site-packages
 ```
 2. Activate the environment
 
@@ -104,7 +116,7 @@ source venv/bin/activate.sh
 3. Install the requirements
 
 ```bash
-pip instal -r requirements.txt
+pip install -r requirements.txt
 ```
 
 Now you are good to go, run `python main.py`.
