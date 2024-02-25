@@ -90,5 +90,5 @@ pip install -r requirements.txt
 
 Now you are good to go, run `cd rgb-led-games && python main.py --game <your-game-of-choice>` and enjoy the game.
 
-![pong](https://drive.google.com/file/d/10AahTA3moF91F0_S2y0Hp2bQSNT8RaPe/export=view&id=10AahTA3moF91F0_S2y0Hp2bQSNT8RaPe)
+![pong](https://drive.google.com/uc?export=view&id=10AahTA3moF91F0_S2y0Hp2bQSNT8RaPe)
 
