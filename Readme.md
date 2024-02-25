@@ -2,7 +2,7 @@
 
 My previous project, LED Space Invaders, was awarded a [Pi-Top 4](https://www.pi-top.com/) device. This fantastic, super-powered Raspberry Pi includes not only a rock-solid case, a battery, and an OLED display but also a set of input and output electronic devices. I decided to leverage the capabilities of the Pi-Top and continue the previous project by constructing a cabinet for the LED Matrix with support for the input devices.
 
-TODO: Picture of the cabinet
+![cabinet](./assets/cabinet.jpg)
 
 ## Hardware
 
