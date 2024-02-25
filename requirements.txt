@@ -1,0 +1,4 @@
+evdev==1.6.1
+loguru==0.7.2
+pytest>=8.0.0
+ruff==0.2.2
